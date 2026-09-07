@@ -1,5 +1,5 @@
 data "aws_iam_user" "principal_user" {
-  user_name = "" # Identificador do usuario que queremos as infos.
+  user_name = "fiap-soat" # Identificador do usuario que queremos as infos.
 }
 
 # TODO DESCOMENTAR
