@@ -1,0 +1,13 @@
+type: object
+properties:
+  vehicleId:
+    type: string
+    format: uuid
+    example: 627c8972-bb1f-44db-abad-f3a63196f356  
+  client:
+    type: string
+    description: email do cliente associado ao pedido
+    example: "teste@teste.com"
+required:
+  - vehicleId
+  - client

@@ -1,0 +1,26 @@
+ name: Deploy Gateway AWS
+
+ on:
+   push:
+     branches: ["main"]
+
+ jobs:
+   gateway:
+     name: API Gateway
+     runs-on: ubuntu-latest
+     steps:
+       - uses: actions/checkout@v4
+
+       - uses: aws-actions/configure-aws-credentials@v4
+         with:
+           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+           aws-region: ${{ secrets.AWS_REGION }}
+
+       - uses: hashicorp/setup-terraform@v3
+
+       - name: Apply Gateway
+         working-directory: gateway
+         run: |
+           terraform init
+           terraform apply -auto-approve

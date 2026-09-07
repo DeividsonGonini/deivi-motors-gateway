@@ -1,0 +1,23 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+    example: 33086f92-d05b-41fe-9036-f674e2072231
+    description: Identificador único do pagamento
+  saleId:
+    type: string
+    format: uuid
+    example: b0aa38cb-27e9-464b-8707-9afeede98c0d
+  status:
+    type: string
+    enum:
+      - AGUARDANDO_PAGAMENTO
+      - PAGAMENTO_APROVADO
+      - PAGAMENTO_RECUSADO
+    example: AGUARDANDO_PAGAMENTO
+    description: Status atual do pagamento
+required:
+- id
+- saleId
+- status

@@ -1,0 +1,26 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+    example: b0aa38cb-27e9-464b-8707-9afeede98c0d
+  client:
+    type: string
+    description: Email do cliente que realizou o pedido
+  vehicle:
+    $ref: './schemas/VehicleResponse.yaml'
+  status:
+    type: string
+    description: Status atual da venda
+    example: "EM_ANDAMENTO"
+  dateTimeSale:
+    type: string
+    format: date-time
+    description: Data e hora em que a venda foi criada
+    example: '2026-09-06T17:30:00.1714265'
+required:
+  - id
+  - client
+  - vehicle
+  - status
+  - dateTimeSale

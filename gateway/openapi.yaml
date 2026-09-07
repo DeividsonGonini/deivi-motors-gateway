@@ -1,0 +1,382 @@
+openapi: 3.0.1
+info:
+  title: Deivi Motors API
+  version: 1.0.0
+paths:
+  /autentications:
+    post:
+      summary: Cadastrar um novo cliente
+      description: Cadastrar um cliente no sistema.
+      operationId: createCustomer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './schemas/CustomerRequest.yaml'
+      responses:
+        "201":
+          description: Cliente criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: './schemas/CustomerResponse.yaml'
+        "200":
+          description: Login realizado com sucesso
+        "400":
+          description: Requisição inválida
+        "401":
+          description: Credenciais invalidas
+        "500":
+          description: Erro interno
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        httpMethod: POST
+        payloadFormatVersion: "1.0"
+        uri: ${lambda_arn}
+  /vehicles:
+    post:
+      summary: Cadastrar um novo veículo
+      description: Cadastrar um veículo no sistema informando marca, modelo, ano, cor e preço.
+      operationId: createVehicle
+      security:
+        - cognitoAuthorizer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './schemas/VehicleRequest.yaml'
+      responses:
+        "201":
+          description: Veículo criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: './schemas/VehicleResponse.yaml'
+        "400":
+          description: Requisição inválida
+        "401":
+          description: Não autorizado
+        "500":
+          description: Erro interno
+      x-amazon-apigateway-integration:
+        type: http_proxy
+        httpMethod: POST
+        connectionType: INTERNET
+        payloadFormatVersion: "1.0"
+        uri: "http://${alb_dns}/deivi_motors/v1/vehicles"
+    get:
+      summary: Buscar veículos por situação
+      description: Retorna uma lista de veículos, sendo filtrados pela situação (A_VENDA ou VENDIDO).
+      operationId: listVehicles
+      security:
+        - cognitoAuthorizer: []
+      parameters:
+        - name: status
+          in: query
+          required: false
+          description: Filtra os veículos pela situação
+          schema:
+            type: string
+            example: "A_VENDA"
+            enum: [
+              "A_VENDA",
+              "VENDIDO"
+            ]
+      responses:
+        "200":
+          description: Lista de veículos retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: './schemas/VehicleStatusResponse.yaml'
+        "400":
+          description: Requisição inválida
+        "401":
+          description: Não autorizado
+        "500":
+          description: Erro interno
+      x-amazon-apigateway-integration:
+        type: http_proxy
+        httpMethod: GET
+        connectionType: INTERNET
+        payloadFormatVersion: "1.0"
+        uri: "http://${alb_dns}/deivi_motors/v1/vehicles"
+  /vehicles/{id}:
+    get:
+      summary: Buscar um veículo pelo ID
+      description: Retorna as informações de um veículo com base no seu identificador único.
+      operationId: getVehicleById
+      security:
+        - cognitoAuthorizer: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identificador único do veículo
+          schema:
+            type: string
+            format: uuid            
+            example: 627c8972-bb1f-44db-abad-f3a63196f356
+      responses:
+        "200":
+          description: Veículo encontrado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: './schemas/VehicleResponse.yaml'
+        "400":
+          description: Requisição inválida
+        "401":
+          description: Não autorizado
+        "404":
+          description: Veículo não encontrado
+        "500":
+          description: Erro interno
+      x-amazon-apigateway-integration:
+        type: http_proxy
+        httpMethod: GET
+        connectionType: INTERNET
+        payloadFormatVersion: "1.0"
+        uri: "http://${alb_dns}/deivi_motors/v1/vehicles/{id}"
+    put:
+      summary: Atualizar um Veículo existente
+      description: Atualizar as informações de um veículo com base no seu identificador.
+      operationId: updateVehicle
+      security:
+        - cognitoAuthorizer: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identificador único do veículo
+          schema:
+            type: string
+            format: uuid            
+            example: 627c8972-bb1f-44db-abad-f3a63196f356
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './schemas/VehicleRequest.yaml'
+            example:
+              brand: "Volkswagen"
+              model: "T-Cross"
+              year: 2024
+              color: "Marrom"
+              price: 95399.99
+      responses:
+        "200":
+          description: veículo atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: './schemas/VehicleResponse.yaml'
+        "400":
+          description: Requisição inválida
+        "401":
+          description: Não autorizado
+        "404":
+          description: veículo não encontrado
+        "500":
+          description: Erro interno
+      x-amazon-apigateway-integration:
+        type: http_proxy
+        httpMethod: PUT
+        connectionType: INTERNET
+        payloadFormatVersion: "1.0"
+        uri: "http://${alb_dns}/deivi_motors/v1/vehicles/{id}"
+  /payments/sale/{id}:
+    get:
+      summary: Consultar status de pagamento de uma venda
+      description: Retorna o status do pagamento de uma venda específica.
+      operationId: getPaymentSaleById
+      security:
+        - cognitoAuthorizer: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identificador único da venda
+          schema:
+            type: string
+            format: uuid
+            example: 627c8972-bb1f-44db-abad-f3a63196f356
+      responses:
+        '200':
+          description: Status do pagamento retornado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: './schemas/PaymentStatusResponse.yaml'
+        '404':
+          description: venda não encontrada
+        "500":
+          description: Erro interno
+      x-amazon-apigateway-integration:
+        type: http_proxy
+        httpMethod: GET
+        connectionType: INTERNET
+        payloadFormatVersion: "1.0"
+        uri: "http://${alb_dns}/deivi_motors/v1/payments/sale/{id}"
+    post:
+      summary: Cria um pagamento para uma venda
+      description: Cria e retorna o status do pagamento inicial de uma venda específica.
+      operationId: postPaymentSaleById
+      security:
+        - cognitoAuthorizer: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identificador único da venda
+          schema:
+            type: string
+            format: uuid
+            example: 627c8972-bb1f-44db-abad-f3a63196f356
+      responses:
+        '201':
+          description: Pagamento criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: './schemas/PaymentResponse.yaml'
+        '404':
+          description: venda não encontrada
+        "500":
+          description: Erro interno
+      x-amazon-apigateway-integration:
+        type: http_proxy
+        httpMethod: POST
+        connectionType: INTERNET
+        payloadFormatVersion: "1.0"
+        uri: "http://${alb_dns}/deivi_motors/v1/payments/sale/{id}"
+  /payments/{idSale}:
+    post:
+      summary: Resposta do pagamento da venda
+      description: Recebe a resposta sobre o pagamento da venda.
+      operationId: paymentSale
+      security:
+        - cognitoAuthorizer: []
+      parameters:
+        - name: idSale
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 627c8972-bb1f-44db-abad-f3a63196f356
+          description: id da venda (UUID)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './schemas/PaymentRequest.yaml'
+      responses:
+        "200":
+          description: Resposta do pagamento da venda recebido com sucesso
+        "400":
+          description: Requisição inválida
+        "401":
+          description: Não autorizado
+        "404":
+          description: venda não localizado
+        "500":
+          description: Erro interno
+      x-amazon-apigateway-integration:
+        type: http_proxy
+        httpMethod: POST
+        connectionType: INTERNET
+        payloadFormatVersion: "1.0"
+        uri: "http://${alb_dns}/webhook/v1/payments/{idSale}"
+  /sales:
+    post:
+      summary: Cadastrar uma nova venda
+      description: Cadastrar uma nova venda no sistema.
+      operationId: createSale
+      security:
+        - cognitoAuthorizer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './schemas/SaleRequest.yaml'
+      responses:
+        "201":
+          description: venda criada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: './schemas/SaleResponse.yaml'
+        "400":
+          description: Requisição inválida
+        "401":
+          description: Não autorizado
+        "404":
+          description: Cliente ou veículo não encontrado
+        "409":
+          description: Conflito ao criar a venda
+        "500":
+          description: Erro interno do servidor
+      x-amazon-apigateway-integration:
+        type: http_proxy
+        httpMethod: POST
+        connectionType: INTERNET
+        payloadFormatVersion: "1.0"
+        uri: "http://${alb_dns}/deivi_motors/v1/sales"
+  /sales/{id}:
+    get:
+      summary: Buscar uma venda pelo ID
+      description: Retorna as informações completas de uma venda com base no seu identificador único.
+      operationId: getSaleById
+      security:
+        - cognitoAuthorizer: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identificador único da venda
+          schema:
+            type: string
+            format: uuid
+            example: 627c8972-bb1f-44db-abad-f3a63196f356
+      responses:
+        "200":
+          description: Venda encontrada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: './schemas/SaleResponse.yaml'
+        "400":
+          description: Requisição inválida
+        "401":
+          description: Não autorizado
+        "404":
+          description: Venda não encontrada
+        "500":
+          description: Erro interno do servidor
+      x-amazon-apigateway-integration:
+        type: http_proxy
+        httpMethod: GET
+        connectionType: INTERNET
+        payloadFormatVersion: "1.0"
+        uri: "http://${alb_dns}/deivi_motors/v1/sales/{id}"
+#### Autenticação com Cognito
+components:
+  securitySchemes:
+    cognitoAuthorizer:
+      type: oauth2
+      x-amazon-apigateway-authorizer:
+        type: jwt
+        identitySource: "$request.header.Authorization"
+        jwtConfiguration:
+          issuer: "https://cognito-idp.us-east-1.amazonaws.com/${cognito_userpool_id}"  # User Pool
+          audience:
+            - "${cognito_client_id}"   # App Client ID do Cognito
+####

@@ -1,0 +1,24 @@
+type: object
+required:
+  - brand
+  - model
+  - year
+  - color
+  - price
+properties:
+  brand:
+    type: string
+    example: "BMW"
+  model:
+    type: string
+    example: "X1"
+  year:
+    type: number
+    example: 2026
+  color:
+    type: string
+    example: "azul"    
+  price:
+    type: number
+    format: float
+    example: 350399.99

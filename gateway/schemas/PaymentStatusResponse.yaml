@@ -1,0 +1,15 @@
+type: object
+properties:
+  saleId:
+    type: string
+    format: uuid
+    example: b0aa38cb-27e9-464b-8707-9afeede98c0d
+  statusPayment:
+    type: string
+    enum:
+      - "PAGAMENTO_APROVADO"
+      - "PAGAMENTO_RECUSADO"
+    example: "PAGAMENTO_APROVADO"
+required:
+  - saleId
+  - statusPayment

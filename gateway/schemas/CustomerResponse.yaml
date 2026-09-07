@@ -1,0 +1,19 @@
+type: object
+properties:
+  id:
+    type: string
+    example: c8a69254-11b7-451e-a692-5411b7d51eda
+  name:
+    type: string
+    example: João da Silva
+  cpf:
+    type: string
+    example: 17871036092
+  email:
+    type: string
+    example: joao.silva@example.com
+required:
+  - id
+  - name
+  - cpf
+  - email

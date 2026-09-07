@@ -1,0 +1,11 @@
+type: object
+required:
+  - status
+properties:
+  status:
+    type: string
+    enum:
+      - "PAGAMENTO_APROVADO"
+      - "PAGAMENTO_RECUSADO"
+    example: "PAGAMENTO_APROVADO"
+    description: Status do Pagamento se foi aprovado ou recusado
