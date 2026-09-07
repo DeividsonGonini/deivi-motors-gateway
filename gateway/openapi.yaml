@@ -3,7 +3,7 @@ info:
   title: Deivi Motors API
   version: 1.0.0
 paths:
-  /autentications:
+  /authentications:
     post:
       summary: Cadastrar um novo cliente
       description: Cadastrar um cliente no sistema.

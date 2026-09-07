@@ -17,7 +17,7 @@ data "aws_lb" "ingress_alb" {
 
 
 data "aws_lambda_function" "authentication"{
-  function_name = "AuthenticationFunction"
+  function_name = "AuthenticationFunctionDeiviMotors"
 }
 
 data "terraform_remote_state" "cluster" {

@@ -1,7 +1,5 @@
 type: object
 required:
-  - cpf
-  - name
   - email
   - password
 properties:
