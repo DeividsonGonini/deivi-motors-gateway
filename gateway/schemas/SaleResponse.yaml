@@ -4,9 +4,9 @@ properties:
     type: string
     format: uuid
     example: b0aa38cb-27e9-464b-8707-9afeede98c0d
-  client:
+  customerCpf:
     type: string
-    description: Email do cliente que realizou o pedido
+    description: CPF do cliente que realizou o pedido
   vehicle:
     $ref: './schemas/VehicleResponse.yaml'
   status:
@@ -20,7 +20,7 @@ properties:
     example: '2026-09-06T17:30:00.1714265'
 required:
   - id
-  - client
+  - customerCpf
   - vehicle
   - status
   - dateTimeSale
