@@ -48,6 +48,10 @@ paths:
       responses:
         "200":
           description: Consulta do cliente realizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: './schemas/CustomerResponse.yaml'
         "404":
           description: Cliente não encontrado
         "400":
@@ -58,7 +62,7 @@ paths:
           description: Erro interno
       x-amazon-apigateway-integration:
         type: aws_proxy
-        httpMethod: POST
+        httpMethod: GET
         payloadFormatVersion: "1.0"
         uri: ${lambda_arn}
   /authentications:
