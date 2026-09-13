@@ -18,9 +18,15 @@ properties:
     format: date-time
     description: Data e hora em que a venda foi criada
     example: '2026-09-06T17:30:00.1714265'
+  totalPrice:
+    type: number
+    format: float
+    description: Valor total da venda.
+    example: 350399.99
 required:
   - id
   - customerCpf
   - vehicle
   - status
   - dateTimeSale
+  - totalPrice

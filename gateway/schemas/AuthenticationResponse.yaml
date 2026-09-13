@@ -1,0 +1,18 @@
+type: object
+properties:
+  IdToken:
+    type: string
+    description: JWT utilizado nas requisições
+    example: " eyJraWQiOiJl..."
+  TokenType:
+    type: string
+    description: Tipo da autenticação
+    example: Bearer
+  RefreshToken:
+    type: string
+    description: JWT
+    example: "eyJjdHkiOi..."
+  AccessToken:
+    type: string
+    description: JWT
+    example: "eyJraWQiO"

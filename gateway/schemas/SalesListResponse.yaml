@@ -1,0 +1,55 @@
+type: array
+items:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+      example: b0aa38cb-27e9-464b-8707-9afeede98c0d
+    customerCpf:
+      type: string
+      description: CPF do cliente que realizou o pedido
+    vehicle:
+      $ref: './schemas/VehicleResponse.yaml'
+    status:
+      type: string
+      description: Status atual da venda
+      example: "EM_ANDAMENTO"
+    dateTimeSale:
+      type: string
+      format: date-time
+      description: Data e hora em que a venda foi criada
+      example: '2026-09-06T17:30:00.1714265'
+    totalPrice:
+      type: number
+      format: float
+      description: Valor total da venda.
+      example: 350399.99
+example:
+  - id: "05d26795-4d10-4777-b53f-729501bc08fe"
+    customerCpf: "19873325557"
+    vehicle:
+      id: "38e490b6-d490-414c-8270-a0dc77399c6f"
+      brand: "Volkswagen"
+      model: "T-Cross"
+      year: 2024
+      color: "Marrom"
+      price: 95399.99
+      status: "A_VENDA"
+    status: "EM_ANDAMENTO"
+    dateTimeSale: "2026-09-12T21:21:52.049"
+    totalPrice: 95399.99
+
+  - id: "af5fbc69-cf5e-4411-8623-74590d7d9b0d"
+    customerCpf: "19873325557"
+    vehicle:
+      id: "0b911ca4-ddf9-4a63-96dd-2c284a980b4b"
+      brand: "Honda"
+      model: "Civic"
+      year: 2023
+      color: "prata"
+      price: 200739.20
+      status: "A_VENDA"
+    status: "EM_ANDAMENTO"
+    dateTimeSale: "2026-09-12T21:19:44.854"
+    totalPrice: 200739.20

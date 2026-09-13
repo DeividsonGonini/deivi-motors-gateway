@@ -3,7 +3,7 @@ info:
   title: Deivi Motors API
   version: 1.0.0
 paths:
-  /authentications:
+  /customers:
     post:
       summary: Cadastrar um novo cliente
       description: Cadastrar um cliente no sistema.
@@ -21,8 +21,64 @@ paths:
             application/json:
               schema:
                 $ref: './schemas/CustomerResponse.yaml'
+        "400":
+          description: Requisição inválida
+        "401":
+          description: Credenciais invalidas
+        "500":
+          description: Erro interno
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        httpMethod: POST
+        payloadFormatVersion: "1.0"
+        uri: ${lambda_arn}
+  /customers/{cpf}:
+    get:
+      summary: Consultar um cliente já cadastrado
+      description: Consultar um cliente no sistema.
+      operationId: getCustomer
+      parameters:
+        - name: cpf
+          in: path
+          required: true
+          description: CPF do cliente da venda
+          schema:
+            type: string
+            example: 12345678901
+      responses:
         "200":
-          description: Login realizado com sucesso
+          description: Consulta do cliente realizada com sucesso
+        "404":
+          description: Cliente não encontrado
+        "400":
+          description: Requisição inválida
+        "401":
+          description: Credenciais invalidas
+        "500":
+          description: Erro interno
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        httpMethod: POST
+        payloadFormatVersion: "1.0"
+        uri: ${lambda_arn}
+  /authentications:
+    post:
+      summary: Autenticar um novo cliente já cadastrado no sistema
+      description: Autenticar um cliente já cadastrado no sistema.
+      operationId: authenticationCustomer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './schemas/CustomerAuthenticationRequest.yaml'
+      responses:
+        "200":
+          description: Cliente autenticado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: './schemas/CustomerAuthenticationResponse.yaml'
         "400":
           description: Requisição inválida
         "401":
@@ -367,6 +423,70 @@ paths:
         connectionType: INTERNET
         payloadFormatVersion: "1.0"
         uri: "http://${alb_dns}/deivi_motors/v1/sales/{id}"
+  /sales/customer/{cpf}:
+    get:
+      summary: Buscar vendas do cliente Logado
+      description: Retorna uma lista de vendas, sendo filtradas pelo CPF do cliente.
+      operationId: listSalesCustomer
+      security:
+        - cognitoAuthorizer: []
+      parameters:
+        - name: cpf
+          in: path
+          required: true
+          description: CPF do cliente da venda
+          schema:
+            type: string
+            example: 12345678901
+      responses:
+        "200":
+          description: Lista de vendas retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: './schemas/SalesListResponse.yaml'
+        "400":
+          description: Requisição inválida
+        "401":
+          description: Não autorizado
+        "500":
+          description: Erro interno
+      x-amazon-apigateway-integration:
+        type: http_proxy
+        httpMethod: GET
+        connectionType: INTERNET
+        payloadFormatVersion: "1.0"
+        uri: "http://${alb_dns}/deivi_motors/v1/sales/customer/{cpf}"
+  /sales/customer/purchases:
+    get:
+      summary: Buscar vendas do cliente Logado
+      description: Retorna uma lista de vendas, sendo filtradas pelo cliente logado (recuperado pelo Token).
+      operationId: listSalesCustomerAuthenticated
+      security:
+        - cognitoAuthorizer: []
+      responses:
+        "200":
+          description: Lista de vendas retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: './schemas/SalesListResponse.yaml'
+        "400":
+          description: Requisição inválida
+        "401":
+          description: Não autorizado
+        "500":
+          description: Erro interno
+      x-amazon-apigateway-integration:
+        type: http_proxy
+        httpMethod: GET
+        connectionType: INTERNET
+        payloadFormatVersion: "1.0"
+        uri: "http://${alb_dns}/deivi_motors/v1/sales/customer/purchases"
 #### Autenticação com Cognito
 components:
   securitySchemes:

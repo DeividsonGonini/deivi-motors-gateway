@@ -1,0 +1,9 @@
+type: object
+properties:
+  message:
+    type: string
+    example: "Login realizado com sucesso"
+    description: Mensagem de sucesso no login
+  authentication:
+    $ref: './schemas/AuthenticationResponse.yaml'
+    description: Dados JWTs para autenticação

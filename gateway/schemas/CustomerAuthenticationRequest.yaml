@@ -1,0 +1,14 @@
+type: object
+required:
+  - cpf
+  - password
+properties:
+  cpf:
+    type: string
+    pattern: '^\d{11}$'
+    example: "62112384015"
+    description: CPF do cliente (somente números)
+  password:
+    type: string
+    example: "Senha%1"
+    description: Nome completo do cliente
