@@ -1,5 +1,5 @@
 data "aws_iam_user" "principal_user" {
-  user_name = "" # Identificador do usuario que queremos as infos.
+  user_name = "fiap-soat" # Identificador do usuario que queremos as infos.
 }
 
 # TODO DESCOMENTAR
@@ -17,7 +17,7 @@ data "aws_lb" "ingress_alb" {
 
 
 data "aws_lambda_function" "authentication"{
-  function_name = "AuthenticationFunction"
+  function_name = "AuthenticationFunctionDeiviMotors"
 }
 
 data "terraform_remote_state" "cluster" {
